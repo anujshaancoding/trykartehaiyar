@@ -7,6 +7,7 @@ import QuoteSection from './components/QuoteSection'
 import FullscreenButton from './components/FullscreenButton'
 import ThemeToggle from './components/ThemeToggle'
 import ActiveUsers from './components/ActiveUsers'
+import CookieConsent from './components/CookieConsent'
 
 function App() {
   const [isFullscreen, setIsFullscreen] = useState(false)
@@ -41,6 +42,14 @@ function App() {
 
   return (
     <>
+      <div className="demo-banner">
+        <div className="demo-banner-content">
+          <span>This is the Demo of what's coming as mobile App</span>
+          <span>This is the Demo of what's coming as mobile App</span>
+          <span>This is the Demo of what's coming as mobile App</span>
+          <span>This is the Demo of what's coming as mobile App</span>
+        </div>
+      </div>
       <ActiveUsers />
       <main className="dashboard anti-burn-in">
         <Clock />
@@ -51,6 +60,7 @@ function App() {
       </main>
       <ThemeToggle />
       <FullscreenButton isFullscreen={isFullscreen} onToggle={toggleFullscreen} />
+      <CookieConsent />
       <footer className="dedication">❤ Dedicated to Ashish Ranjan ❤</footer>
     </>
   )
