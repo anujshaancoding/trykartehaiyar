@@ -3,7 +3,9 @@
     "allow": [
       "Bash(npm install:*)",
       "Bash(npm run build:*)",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "Read(//c/Users/imanu/Documents/GitHub/**)",
+      "Bash(git -C HabbitTracker log --oneline)"
     ]
   }
 }
