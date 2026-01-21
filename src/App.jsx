@@ -4,14 +4,19 @@ import ProgressSection from './components/ProgressSection'
 import HabitsSection from './components/HabitsSection'
 import GoalsSection from './components/GoalsSection'
 import QuoteSection from './components/QuoteSection'
+import CommunitySection from './components/CommunitySection'
 import FullscreenButton from './components/FullscreenButton'
 import ThemeToggle from './components/ThemeToggle'
 import ActiveUsers from './components/ActiveUsers'
 import CookieConsent from './components/CookieConsent'
 import FeedbackButton from './components/FeedbackButton'
+import TopMenu from './components/TopMenu'
+import InfoModal from './components/InfoModal'
 
 function App() {
   const [isFullscreen, setIsFullscreen] = useState(false)
+  const [feedbackOpen, setFeedbackOpen] = useState(false)
+  const [infoOpen, setInfoOpen] = useState(false)
   const [showBanner, setShowBanner] = useState(() => {
     return localStorage.getItem('bannerClosed') !== 'true'
   })
@@ -27,6 +32,14 @@ function App() {
     }
 
     const handleKeyDown = (e) => {
+      // Don't trigger shortcuts when user is typing in an input field
+      const activeElement = document.activeElement
+      const isTyping = activeElement.tagName === 'INPUT' ||
+                       activeElement.tagName === 'TEXTAREA' ||
+                       activeElement.isContentEditable
+
+      if (isTyping) return
+
       if (e.key === 'f' || e.key === 'F') {
         toggleFullscreen()
       }
@@ -78,18 +91,22 @@ function App() {
         </div>
       )}
       <ActiveUsers />
-      <FeedbackButton />
+      <TopMenu onFeedbackClick={() => setFeedbackOpen(true)} onInfoClick={() => setInfoOpen(true)} />
+      <FeedbackButton externalOpen={feedbackOpen} onClose={() => setFeedbackOpen(false)} />
+      <InfoModal isOpen={infoOpen} onClose={() => setInfoOpen(false)} />
       <main className="dashboard anti-burn-in">
         <Clock />
         <ProgressSection />
         <HabitsSection />
         <GoalsSection />
         <QuoteSection />
+        <CommunitySection />
       </main>
       <ThemeToggle />
       <FullscreenButton isFullscreen={isFullscreen} onToggle={toggleFullscreen} />
       <CookieConsent />
       <footer className="dedication">❤ Dedicated to Ashish Ranjan ❤</footer>
+      <div className="license">© 2026 TKHY</div>
     </>
   )
 }

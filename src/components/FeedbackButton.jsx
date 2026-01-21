@@ -1,8 +1,10 @@
 import { useState, useRef, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
 
-function FeedbackButton() {
-  const [isOpen, setIsOpen] = useState(false)
+function FeedbackButton({ externalOpen, onClose }) {
+  const [internalOpen, setInternalOpen] = useState(false)
+  const isOpen = externalOpen !== undefined ? externalOpen : internalOpen
+  const setIsOpen = externalOpen !== undefined ? (val) => { if (!val && onClose) onClose(); } : setInternalOpen
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [feedback, setFeedback] = useState('')

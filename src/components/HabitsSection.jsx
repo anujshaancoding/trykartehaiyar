@@ -1,11 +1,54 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useHabits } from '../hooks/useHabits'
 import HabitItem from './HabitItem'
+
+const motivationalMessages = [
+  "You can still make it!",
+  "You can still seize the day!",
+  "You can still conquer today!",
+  "There's still time to shine!",
+  "Make every moment count!",
+  "You've got this!",
+  "Keep pushing forward!",
+  "Finish strong today!",
+  "Your goals are within reach!",
+  "Don't stop now!",
+]
+
+function getTimeRemaining() {
+  const now = new Date()
+  const endOfDay = new Date(now)
+  endOfDay.setHours(23, 59, 59, 999)
+  const diffMs = endOfDay - now
+  const diffHours = Math.floor(diffMs / (1000 * 60 * 60))
+  const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60))
+
+  if (diffHours >= 1) {
+    return `${diffHours} hour${diffHours !== 1 ? 's' : ''}`
+  }
+  return `${diffMinutes} minute${diffMinutes !== 1 ? 's' : ''}`
+}
 
 function HabitsSection() {
   const { habits, completedHabits, toggleHabit, addHabit, deleteHabit, completedCount, totalCount, streakMessage } = useHabits()
   const [newHabitText, setNewHabitText] = useState('')
   const [isAdding, setIsAdding] = useState(false)
+  const [motivationalMessage, setMotivationalMessage] = useState('')
+  const [timeRemaining, setTimeRemaining] = useState('')
+
+  useEffect(() => {
+    // Pick a random message on mount
+    const randomIndex = Math.floor(Math.random() * motivationalMessages.length)
+    setMotivationalMessage(motivationalMessages[randomIndex])
+    setTimeRemaining(getTimeRemaining())
+
+    // Update time remaining every minute
+    const interval = setInterval(() => {
+      setTimeRemaining(getTimeRemaining())
+    }, 60000)
+
+    return () => clearInterval(interval)
+  }, [])
 
   const handleAddHabit = (e) => {
     e.preventDefault()
@@ -30,6 +73,12 @@ function HabitsSection() {
           </button>
         )}
       </div>
+
+      {totalCount > 0 && completedCount < totalCount && (
+        <p className="motivation-message">
+          {timeRemaining} left today. {motivationalMessage}
+        </p>
+      )}
 
       {isAdding && (
         <form className="add-habit-form" onSubmit={handleAddHabit}>
