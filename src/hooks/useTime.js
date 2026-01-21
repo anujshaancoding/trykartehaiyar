@@ -11,9 +11,13 @@ export function useTime() {
     return () => clearInterval(interval)
   }, [])
 
-  const hours = String(time.getHours()).padStart(2, '0')
+  // 12-hour format
+  const hour24 = time.getHours()
+  const hour12 = hour24 % 12 || 12
+  const hours = String(hour12).padStart(2, '0')
   const minutes = String(time.getMinutes()).padStart(2, '0')
   const seconds = String(time.getSeconds()).padStart(2, '0')
+  const period = hour24 >= 12 ? 'PM' : 'AM'
 
   const dateString = time.toLocaleDateString('en-US', {
     weekday: 'long',
@@ -27,6 +31,7 @@ export function useTime() {
     hours,
     minutes,
     seconds,
+    period,
     dateString
   }
 }

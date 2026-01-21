@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react'
 import { useTime } from '../hooks/useTime'
 
 function Clock() {
-  const { hours, minutes, seconds, dateString } = useTime()
+  const { hours, minutes, seconds, period, dateString } = useTime()
 
   return (
     <section className="time-section" aria-label="Current time and date">
@@ -12,6 +11,7 @@ function Clock() {
         <span className="clock-digit">{minutes}</span>
         <span className="clock-separator">:</span>
         <span className="clock-digit">{seconds}</span>
+        <span className="clock-period">{period}</span>
       </div>
       <div className="date-display">{dateString}</div>
       <p className="tagline">This moment decides everything</p>
