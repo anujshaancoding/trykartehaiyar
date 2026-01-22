@@ -9,26 +9,29 @@ function ProgressSection() {
     monthProgress,
     yearProgress,
     monthSubtext,
+    monthHarshText,
     yearSubtext,
+    yearHarshText,
     currentYear,
     yearMessage
   } = useProgress()
 
   return (
     <section className="progress-section" aria-label="Time progress tracking">
-      <h2 className="section-title">Time Remaining</h2>
+      <h2 className="section-title">Time You Don't Get Back</h2>
 
       {/* Month Progress */}
       <div className="progress-item">
         <div className="progress-header">
           <span className="progress-label">
             <span className="icon">🔥</span>
-            Days left this month
+            <span className="progress-value month">{daysLeftMonth}</span> days left this month
           </span>
-          <span className="progress-value month">{daysLeftMonth}</span>
         </div>
+        <p className="progress-tagline">Most goals die here.</p>
         <ProgressBar progress={monthProgress} variant="month" />
         <p className="progress-subtext">{monthSubtext}</p>
+        <p className="progress-harsh-text">{monthHarshText}</p>
       </div>
 
       {/* Year Progress */}
@@ -36,12 +39,13 @@ function ProgressSection() {
         <div className="progress-header">
           <span className="progress-label">
             <span className="icon">🚀</span>
-            Days left this year
+            <span className="progress-value year">{daysLeftYear}</span> days left this year
           </span>
-          <span className="progress-value year">{daysLeftYear}</span>
         </div>
+        <p className="progress-tagline">Enough time to change everything — or nothing.</p>
         <ProgressBar progress={yearProgress} variant="year" />
         <p className="progress-subtext">{yearSubtext}</p>
+        <p className="progress-harsh-text">{yearHarshText}</p>
       </div>
 
       {/* Circular Year Progress */}

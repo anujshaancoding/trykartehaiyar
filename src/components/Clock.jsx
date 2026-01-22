@@ -1,7 +1,7 @@
 import { useTime } from '../hooks/useTime'
 
 function Clock() {
-  const { hours, minutes, seconds, period, dateString } = useTime()
+  const { hours, minutes, seconds, period, dateString, hourlyMessage } = useTime()
 
   return (
     <section className="time-section" aria-label="Current time and date">
@@ -14,7 +14,7 @@ function Clock() {
         <span className="clock-period">{period}</span>
       </div>
       <div className="date-display">{dateString}</div>
-      <p className="tagline">This moment decides everything</p>
+      <p className="hourly-truth">{hourlyMessage}</p>
     </section>
   )
 }

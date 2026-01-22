@@ -1,5 +1,33 @@
 import { useState, useEffect, useMemo } from 'react'
 
+// Harsh month messages based on how much time is left
+const getMonthHarshMessage = (daysLeft, daysInMonth) => {
+  const percentLeft = (daysLeft / daysInMonth) * 100
+  if (percentLeft <= 10) {
+    return `Only ${daysLeft} days. This month is almost over.`
+  } else if (percentLeft <= 30) {
+    return `Only ${daysLeft} days left to change this month.`
+  } else if (percentLeft <= 50) {
+    return `Most people waste these last ${daysLeft} days.`
+  } else {
+    return `${daysLeft} days. What will you do with them?`
+  }
+}
+
+// Harsh year messages based on how much time is left
+const getYearHarshMessage = (daysLeft, totalDays) => {
+  const percentLeft = (daysLeft / totalDays) * 100
+  if (percentLeft <= 10) {
+    return `Only ${daysLeft} days left. The year is almost decided.`
+  } else if (percentLeft <= 25) {
+    return `${daysLeft} days. Most people give up here.`
+  } else if (percentLeft <= 50) {
+    return `${daysLeft} days left. Still time — barely.`
+  } else {
+    return `${daysLeft} days remain. Use them or lose them.`
+  }
+}
+
 export function useProgress() {
   const [now, setNow] = useState(new Date())
 
@@ -29,11 +57,13 @@ export function useProgress() {
     const daysLeftYear = totalDaysInYear - dayOfYear
     const yearProgress = (dayOfYear / totalDaysInYear) * 100
 
-    // Month subtext
-    const monthSubtext = `${currentDay} of ${daysInMonth} days completed (${Math.round(monthProgress)}%)`
+    // Month subtext with stats and harsh message
+    const monthStatText = `${currentDay} of ${daysInMonth} days used · ${Math.round(monthProgress)}% gone`
+    const monthHarshText = getMonthHarshMessage(daysLeftMonth, daysInMonth)
 
-    // Year subtext
-    const yearSubtext = `Day ${dayOfYear} of ${totalDaysInYear} (${Math.round(yearProgress)}% complete)`
+    // Year subtext with stats and harsh message
+    const yearStatText = `Day ${dayOfYear} of ${totalDaysInYear} · The clock is running`
+    const yearHarshText = getYearHarshMessage(daysLeftYear, totalDaysInYear)
 
     // Dynamic year message
     let yearMessage
@@ -52,10 +82,13 @@ export function useProgress() {
       daysLeftYear,
       monthProgress,
       yearProgress,
-      monthSubtext,
-      yearSubtext,
+      monthSubtext: monthStatText,
+      monthHarshText,
+      yearSubtext: yearStatText,
+      yearHarshText,
       currentYear: year,
-      yearMessage
+      yearMessage,
+      daysInMonth
     }
   }, [now])
 

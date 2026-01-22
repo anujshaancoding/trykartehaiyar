@@ -13,12 +13,28 @@ function ThemeToggle() {
   const [currentTheme, setCurrentTheme] = useState(() => {
     return localStorage.getItem('theme') || 'dark'
   })
+  const [ambientMode, setAmbientMode] = useState(() => {
+    return localStorage.getItem('ambientMode') === 'true'
+  })
+  const [ultraLargeMode, setUltraLargeMode] = useState(() => {
+    return localStorage.getItem('ultraLargeMode') === 'true'
+  })
   const menuRef = useRef(null)
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', currentTheme)
     localStorage.setItem('theme', currentTheme)
   }, [currentTheme])
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('ambient-mode', ambientMode)
+    localStorage.setItem('ambientMode', ambientMode)
+  }, [ambientMode])
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('ultra-large-mode', ultraLargeMode)
+    localStorage.setItem('ultraLargeMode', ultraLargeMode)
+  }, [ultraLargeMode])
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -60,21 +76,48 @@ function ThemeToggle() {
 
       {isOpen && (
         <div className="theme-menu">
-          {themes.map((theme) => (
+          <div className="menu-section">
+            <span className="menu-section-label">Theme</span>
+            {themes.map((theme) => (
+              <button
+                key={theme.id}
+                className={`theme-option ${currentTheme === theme.id ? 'active' : ''}`}
+                onClick={() => handleThemeChange(theme.id)}
+              >
+                <span className="theme-icon">{theme.icon}</span>
+                <span className="theme-name">{theme.name}</span>
+                {currentTheme === theme.id && (
+                  <svg className="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                )}
+              </button>
+            ))}
+          </div>
+          <div className="menu-divider"></div>
+          <div className="menu-section">
+            <span className="menu-section-label">Display Mode</span>
             <button
-              key={theme.id}
-              className={`theme-option ${currentTheme === theme.id ? 'active' : ''}`}
-              onClick={() => handleThemeChange(theme.id)}
+              className={`theme-option toggle-option ${ambientMode ? 'active' : ''}`}
+              onClick={() => setAmbientMode(!ambientMode)}
             >
-              <span className="theme-icon">{theme.icon}</span>
-              <span className="theme-name">{theme.name}</span>
-              {currentTheme === theme.id && (
-                <svg className="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-                  <polyline points="20 6 9 17 4 12" />
-                </svg>
-              )}
+              <span className="theme-icon">✨</span>
+              <span className="theme-name">Ambient Mode</span>
+              <span className="toggle-switch">
+                <span className={`toggle-slider ${ambientMode ? 'on' : ''}`}></span>
+              </span>
             </button>
-          ))}
+            <button
+              className={`theme-option toggle-option ${ultraLargeMode ? 'active' : ''}`}
+              onClick={() => setUltraLargeMode(!ultraLargeMode)}
+            >
+              <span className="theme-icon">📺</span>
+              <span className="theme-name">TV / Wall Mode</span>
+              <span className="toggle-switch">
+                <span className={`toggle-slider ${ultraLargeMode ? 'on' : ''}`}></span>
+              </span>
+            </button>
+          </div>
         </div>
       )}
     </div>
