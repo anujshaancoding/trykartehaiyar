@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
 
+// Default feedback count offset (added to database count)
+const DEFAULT_FEEDBACK_COUNT = 23
+
 export function useFeedbackCount() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(DEFAULT_FEEDBACK_COUNT)
 
   useEffect(() => {
     const fetchCount = async () => {
@@ -13,7 +16,7 @@ export function useFeedbackCount() {
       if (error) {
         console.error('Error fetching feedback count:', error)
       } else if (count !== null) {
-        setCount(count)
+        setCount(DEFAULT_FEEDBACK_COUNT + count)
       }
     }
 

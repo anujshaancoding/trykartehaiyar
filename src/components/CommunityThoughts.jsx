@@ -2,6 +2,28 @@ import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
 import { useLeaderboard } from '../hooks/useLeaderboard'
 
+// Default community messages with Indian names (shown alongside database messages)
+const DEFAULT_MESSAGES = [
+  { id: 'default-1', name: 'Aarav Sharma', message: 'Just completed my morning meditation! Feeling refreshed and ready for the day.', flagged: false, blurred: false, created_at: '2026-01-26T06:30:00Z' },
+  { id: 'default-2', name: 'Priya Patel', message: 'Grateful for this community. Small steps lead to big changes!', flagged: false, blurred: false, created_at: '2026-01-26T07:15:00Z' },
+  { id: 'default-3', name: 'Rohan Verma', message: 'Day 15 of my fitness journey. Consistency is key!', flagged: false, blurred: false, created_at: '2026-01-26T08:00:00Z' },
+  { id: 'default-4', name: 'Ananya Gupta', message: 'Finished reading 20 pages today. Books are magical!', flagged: false, blurred: false, created_at: '2026-01-26T09:45:00Z' },
+  { id: 'default-5', name: 'Vikram Singh', message: 'Woke up early for the first time in months. Baby steps!', flagged: false, blurred: false, created_at: '2026-01-26T10:30:00Z' },
+  { id: 'default-6', name: 'Neha Reddy', message: 'Cooked a healthy meal today instead of ordering out. Proud of myself!', flagged: false, blurred: false, created_at: '2026-01-26T12:00:00Z' },
+  { id: 'default-7', name: 'Arjun Nair', message: 'Completed my daily coding practice. Learning React is fun!', flagged: false, blurred: false, created_at: '2026-01-26T14:20:00Z' },
+  { id: 'default-8', name: 'Kavya Iyer', message: 'Went for an evening walk. Nature is so peaceful.', flagged: false, blurred: false, created_at: '2026-01-26T17:45:00Z' },
+  { id: 'default-9', name: 'Aditya Kumar', message: 'Practiced guitar for 30 minutes. Getting better every day!', flagged: false, blurred: false, created_at: '2026-01-26T19:00:00Z' },
+  { id: 'default-10', name: 'Ishita Mehta', message: 'Journaling before bed has changed my life. Highly recommend!', flagged: false, blurred: false, created_at: '2026-01-26T21:30:00Z' },
+  { id: 'default-11', name: 'Karthik Rao', message: 'Started my day with yoga. Namaste everyone!', flagged: false, blurred: false, created_at: '2026-01-27T05:45:00Z' },
+  { id: 'default-12', name: 'Divya Menon', message: 'Drank 8 glasses of water today. Staying hydrated!', flagged: false, blurred: false, created_at: '2026-01-27T08:15:00Z' },
+  { id: 'default-13', name: 'Rahul Joshi', message: 'Finally organized my workspace. Clean desk, clear mind!', flagged: false, blurred: false, created_at: '2026-01-27T10:00:00Z' },
+  { id: 'default-14', name: 'Sneha Agarwal', message: 'Meditated for 15 minutes. Inner peace is priceless.', flagged: false, blurred: false, created_at: '2026-01-27T11:30:00Z' },
+  { id: 'default-15', name: 'Manish Tiwari', message: 'Took a break from social media today. Feeling lighter!', flagged: false, blurred: false, created_at: '2026-01-27T13:00:00Z' },
+  { id: 'default-16', name: 'Pooja Desai', message: 'Helped a stranger today. Kindness costs nothing!', flagged: false, blurred: false, created_at: '2026-01-27T15:20:00Z' },
+  { id: 'default-17', name: 'Sanjay Pillai', message: 'Learned a new recipe. Cooking is therapeutic!', flagged: false, blurred: false, created_at: '2026-01-27T17:00:00Z' },
+  { id: 'default-18', name: 'Meera Krishnan', message: 'Spent quality time with family. Blessed!', flagged: false, blurred: false, created_at: '2026-01-27T19:30:00Z' }
+]
+
 // Rate limiting configuration
 const MESSAGE_RATE_LIMIT = 5 // Max messages allowed
 const RATE_LIMIT_WINDOW = 60 * 60 * 1000 // 1 hour in milliseconds
@@ -144,8 +166,17 @@ function CommunityThoughts() {
 
       if (error) {
         console.error('Error fetching thoughts:', error)
+        // Show default messages even if database fails
+        setThoughts([...DEFAULT_MESSAGES].sort((a, b) => new Date(b.created_at) - new Date(a.created_at)))
       } else {
-        setThoughts(data || [])
+        // Merge database messages with default messages
+        const dbMessages = data || []
+        const allMessages = [...dbMessages, ...DEFAULT_MESSAGES]
+        // Sort by created_at descending and take top 50
+        const sortedMessages = allMessages
+          .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+          .slice(0, 50)
+        setThoughts(sortedMessages)
       }
       setIsLoading(false)
     }

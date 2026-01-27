@@ -1,6 +1,28 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
 
+// Default leaderboard entries (added to database entries)
+const DEFAULT_LEADERS = [
+  { id: 'default-1', name: 'Aarav Sharma', points: 245 },
+  { id: 'default-2', name: 'Priya Patel', points: 198 },
+  { id: 'default-3', name: 'Rohan Verma', points: 176 },
+  { id: 'default-4', name: 'Ananya Gupta', points: 154 },
+  { id: 'default-5', name: 'Vikram Singh', points: 142 },
+  { id: 'default-6', name: 'Neha Reddy', points: 128 },
+  { id: 'default-7', name: 'Arjun Nair', points: 115 },
+  { id: 'default-8', name: 'Kavya Iyer', points: 98 },
+  { id: 'default-9', name: 'Aditya Kumar', points: 87 },
+  { id: 'default-10', name: 'Ishita Mehta', points: 76 },
+  { id: 'default-11', name: 'Karthik Rao', points: 65 },
+  { id: 'default-12', name: 'Divya Menon', points: 54 },
+  { id: 'default-13', name: 'Rahul Joshi', points: 48 },
+  { id: 'default-14', name: 'Sneha Agarwal', points: 42 },
+  { id: 'default-15', name: 'Manish Tiwari', points: 35 },
+  { id: 'default-16', name: 'Pooja Desai', points: 28 },
+  { id: 'default-17', name: 'Sanjay Pillai', points: 22 },
+  { id: 'default-18', name: 'Meera Krishnan', points: 15 }
+]
+
 function Leaderboard() {
   const [leaders, setLeaders] = useState([])
   const [isLoading, setIsLoading] = useState(true)
@@ -11,12 +33,43 @@ function Leaderboard() {
         .from('leaderboard')
         .select('*')
         .order('points', { ascending: false })
-        .limit(10)
+        .limit(50)
 
       if (error) {
         console.error('Error fetching leaderboard:', error)
+        // Show default leaders if database fails
+        setLeaders(DEFAULT_LEADERS.slice(0, 10))
       } else {
-        setLeaders(data || [])
+        // Merge database leaders with default leaders
+        const dbLeaders = data || []
+        const mergedMap = new Map()
+
+        // First add default leaders
+        DEFAULT_LEADERS.forEach(leader => {
+          mergedMap.set(leader.name.toLowerCase(), { ...leader })
+        })
+
+        // Then merge database leaders (add points if same name exists)
+        dbLeaders.forEach(leader => {
+          const key = leader.name.toLowerCase()
+          if (mergedMap.has(key)) {
+            const existing = mergedMap.get(key)
+            mergedMap.set(key, {
+              ...existing,
+              id: leader.id, // Use database ID
+              points: existing.points + leader.points
+            })
+          } else {
+            mergedMap.set(key, { ...leader })
+          }
+        })
+
+        // Convert to array, sort by points, and take top 10
+        const sortedLeaders = Array.from(mergedMap.values())
+          .sort((a, b) => b.points - a.points)
+          .slice(0, 10)
+
+        setLeaders(sortedLeaders)
       }
       setIsLoading(false)
     }

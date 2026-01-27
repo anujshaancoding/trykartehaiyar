@@ -1,6 +1,12 @@
 import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '../lib/supabase'
 
+// Default visits data to show baseline activity (added to database counts)
+const DEFAULT_VISITS = [
+  { date: '2026-01-26', visit_count: 22 },
+  { date: '2026-01-27', visit_count: 31 }
+]
+
 export function useDailyVisits() {
   const [visitsData, setVisitsData] = useState([])
   const [loading, setLoading] = useState(true)
@@ -80,8 +86,33 @@ export function useDailyVisits() {
         console.error('Failed to fetch visits:', error)
         setVisitsData([])
       } else {
+        // Merge database data with default visits
+        const dbData = data || []
+        const mergedDataMap = new Map()
+
+        // First add default visits
+        DEFAULT_VISITS.forEach(item => {
+          mergedDataMap.set(item.date, item.visit_count)
+        })
+
+        // Then add/merge database visits (database values add to defaults)
+        dbData.forEach(item => {
+          const existing = mergedDataMap.get(item.date) || 0
+          mergedDataMap.set(item.date, existing + item.visit_count)
+        })
+
+        // Convert map to array and sort by date
+        const mergedData = Array.from(mergedDataMap.entries())
+          .map(([date, visit_count]) => ({ date, visit_count }))
+          .sort((a, b) => new Date(a.date) - new Date(b.date))
+
+        // Filter by start date if applicable
+        const filteredData = startDate
+          ? mergedData.filter(item => item.date >= startDate.toISOString().split('T')[0])
+          : mergedData
+
         // Format data for the chart
-        const formattedData = (data || []).map(item => ({
+        const formattedData = filteredData.map(item => ({
           date: item.date,
           visits: item.visit_count,
           // Format date for display
