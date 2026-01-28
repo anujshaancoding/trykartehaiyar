@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Routes, Route } from 'react-router-dom'
 import Clock from './components/Clock'
 import ProgressSection from './components/ProgressSection'
 import HabitsSection from './components/HabitsSection'
@@ -13,6 +14,8 @@ import FeedbackButton from './components/FeedbackButton'
 import TopMenu from './components/TopMenu'
 import InfoModal from './components/InfoModal'
 import Onboarding from './components/Onboarding'
+import BlogList from './components/BlogList'
+import BlogDetail from './components/BlogDetail'
 import { useTime } from './hooks/useTime'
 
 const NIGHT_MESSAGES = [
@@ -108,7 +111,7 @@ function App() {
     }
   }
 
-  return (
+  const HomePage = () => (
     <>
       <Onboarding />
       {showBanner && !isFullscreen && (
@@ -162,6 +165,14 @@ function App() {
         <p className="license">© 2026 TKHY</p>
       </footer>
     </>
+  )
+
+  return (
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/blog" element={<BlogList />} />
+      <Route path="/blog/:slug" element={<BlogDetail />} />
+    </Routes>
   )
 }
 

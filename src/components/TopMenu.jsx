@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { useFeedbackCount } from '../hooks/useFeedbackCount'
 
 function TopMenu({ onFeedbackClick, onInfoClick }) {
@@ -26,6 +27,13 @@ function TopMenu({ onFeedbackClick, onInfoClick }) {
     <div className="top-menu" ref={menuRef}>
       {/* Desktop view */}
       <div className="top-menu-desktop">
+        <Link to="/blog" className="top-menu-btn top-menu-journey-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+          </svg>
+          <span>My Journey</span>
+          <div className="journey-pulse"></div>
+        </Link>
         <button className="top-menu-btn top-menu-info-btn" onClick={onInfoClick} aria-label="About this app">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <circle cx="12" cy="12" r="10" />
@@ -70,6 +78,13 @@ function TopMenu({ onFeedbackClick, onInfoClick }) {
       {/* Mobile dropdown */}
       {isOpen && (
         <div className="top-menu-dropdown">
+          <Link to="/blog" className="top-menu-dropdown-item top-menu-dropdown-journey" onClick={() => setIsOpen(false)}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+            </svg>
+            <span>My Journey</span>
+            <div className="journey-pulse-mobile"></div>
+          </Link>
           <button className="top-menu-dropdown-item" onClick={() => { onInfoClick(); setIsOpen(false); }}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <circle cx="12" cy="12" r="10" />
