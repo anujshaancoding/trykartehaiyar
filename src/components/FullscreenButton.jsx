@@ -1,3 +1,5 @@
+"use client"
+
 function FullscreenButton({ isFullscreen, onToggle }) {
   return (
     <button

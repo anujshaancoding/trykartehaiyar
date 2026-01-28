@@ -1,3 +1,5 @@
+"use client"
+
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
 import { useLeaderboard } from '../hooks/useLeaderboard'
@@ -137,14 +139,19 @@ function formatTime(date) {
 
 function CommunityThoughts() {
   const [thoughts, setThoughts] = useState([])
-  const [thoughtName, setThoughtName] = useState(() => {
-    return localStorage.getItem('leaderboardUserName') || ''
-  })
+  const [thoughtName, setThoughtName] = useState('')
   const [thoughtMessage, setThoughtMessage] = useState('')
   const [thoughtError, setThoughtError] = useState('')
   const [isLoading, setIsLoading] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [remainingMsgs, setRemainingMsgs] = useState(() => getRemainingMessages())
+  const [remainingMsgs, setRemainingMsgs] = useState(MESSAGE_RATE_LIMIT)
+
+  // Load from localStorage after hydration
+  useEffect(() => {
+    const savedName = localStorage.getItem('leaderboardUserName') || ''
+    setThoughtName(savedName)
+    setRemainingMsgs(getRemainingMessages())
+  }, [])
   const { addMessagePoints, startTimeTracking } = useLeaderboard()
 
   // Update remaining messages count periodically

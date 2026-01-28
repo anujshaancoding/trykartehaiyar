@@ -1,3 +1,5 @@
+"use client"
+
 import { useTime } from '../hooks/useTime'
 
 function Clock() {

@@ -1,3 +1,5 @@
+"use client"
+
 import { useState } from 'react'
 import { useActiveUsers } from '../hooks/useActiveUsers'
 import VisitsGraph from './VisitsGraph'

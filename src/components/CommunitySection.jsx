@@ -1,3 +1,5 @@
+"use client"
+
 import CommunityThoughts from './CommunityThoughts'
 import Leaderboard from './Leaderboard'
 

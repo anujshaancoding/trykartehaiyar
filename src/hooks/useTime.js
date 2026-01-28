@@ -17,15 +17,33 @@ const HOURLY_MESSAGES = [
 ]
 
 export function useTime() {
-  const [time, setTime] = useState(new Date())
+  const [time, setTime] = useState(null)
 
   useEffect(() => {
+    // Set initial time after hydration to avoid mismatch
+    setTime(new Date())
+
     const interval = setInterval(() => {
       setTime(new Date())
     }, 1000)
 
     return () => clearInterval(interval)
   }, [])
+
+  // Return placeholder values before hydration
+  if (!time) {
+    return {
+      time: null,
+      hours: '--',
+      minutes: '--',
+      seconds: '--',
+      period: '',
+      dateString: '',
+      hourlyMessage: '',
+      isNightTime: false,
+      hour24: 0
+    }
+  }
 
   // 12-hour format
   const hour24 = time.getHours()
@@ -43,9 +61,7 @@ export function useTime() {
   const dateString = `${weekday} · ${month} ${day}, ${year}`
 
   // Hourly rotating message - one harsh truth per hour
-  const hourlyMessageIndex = useMemo(() => {
-    return hour12 % HOURLY_MESSAGES.length
-  }, [hour12])
+  const hourlyMessageIndex = hour12 % HOURLY_MESSAGES.length
   const hourlyMessage = HOURLY_MESSAGES[hourlyMessageIndex]
 
   // Night time detection (after 9 PM)

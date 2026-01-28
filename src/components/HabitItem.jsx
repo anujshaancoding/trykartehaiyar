@@ -1,3 +1,5 @@
+"use client"
+
 function HabitItem({ habit, isCompleted, onToggle, onDelete }) {
   const handleDelete = (e) => {
     e.stopPropagation()

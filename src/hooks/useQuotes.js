@@ -4,11 +4,14 @@ import { QUOTES } from '../data/quotes'
 const QUOTE_INTERVAL = 15 * 60 // 15 minutes in seconds
 
 export function useQuotes() {
-  const [currentIndex, setCurrentIndex] = useState(() =>
-    Math.floor(Math.random() * QUOTES.length)
-  )
+  const [currentIndex, setCurrentIndex] = useState(0)
   const [isTransitioning, setIsTransitioning] = useState(false)
   const [timeRemaining, setTimeRemaining] = useState(QUOTE_INTERVAL)
+
+  // Pick random quote after hydration to avoid mismatch
+  useEffect(() => {
+    setCurrentIndex(Math.floor(Math.random() * QUOTES.length))
+  }, [])
 
   const getNextQuote = useCallback(() => {
     setIsTransitioning(true)

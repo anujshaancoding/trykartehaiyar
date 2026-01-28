@@ -1,11 +1,19 @@
+"use client"
+
 import { useState, useEffect } from 'react'
 
 function ReadingControls({ language }) {
   const [showScrollTop, setShowScrollTop] = useState(false)
   const [showFontControls, setShowFontControls] = useState(false)
-  const [fontSize, setFontSize] = useState(() => {
-    return localStorage.getItem('blogFontSize') || 'medium'
-  })
+  const [fontSize, setFontSize] = useState('medium')
+  const [mounted, setMounted] = useState(false)
+
+  // Read localStorage after hydration to avoid mismatch
+  useEffect(() => {
+    const savedSize = localStorage.getItem('blogFontSize')
+    if (savedSize) setFontSize(savedSize)
+    setMounted(true)
+  }, [])
 
   // Font size options
   const fontSizes = {
@@ -25,10 +33,11 @@ function ReadingControls({ language }) {
   }, [])
 
   useEffect(() => {
+    if (!mounted) return
     // Apply font size to blog content
     document.documentElement.setAttribute('data-blog-font', fontSize)
     localStorage.setItem('blogFontSize', fontSize)
-  }, [fontSize])
+  }, [fontSize, mounted])
 
   const scrollToTop = () => {
     window.scrollTo({

@@ -1,3 +1,5 @@
+"use client"
+
 import { useRef, useEffect } from 'react'
 
 function InfoModal({ isOpen, onClose }) {

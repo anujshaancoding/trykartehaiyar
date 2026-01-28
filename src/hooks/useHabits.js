@@ -7,6 +7,7 @@ const AWARDED_POINTS_KEY = 'awardedHabitPoints'
 
 // Add points for task completion
 async function addTaskPoints() {
+  if (typeof window === 'undefined') return
   const userName = localStorage.getItem('leaderboardUserName')
   if (!userName) return
 
@@ -50,6 +51,7 @@ const DEFAULT_HABITS = [
 ]
 
 function loadHabits() {
+  if (typeof window === 'undefined') return DEFAULT_HABITS
   try {
     const saved = localStorage.getItem(HABITS_KEY)
     if (saved) {
@@ -62,6 +64,7 @@ function loadHabits() {
 }
 
 function saveHabits(habits) {
+  if (typeof window === 'undefined') return
   try {
     localStorage.setItem(HABITS_KEY, JSON.stringify(habits))
   } catch (e) {
@@ -70,6 +73,7 @@ function saveHabits(habits) {
 }
 
 function loadCompletedFromStorage() {
+  if (typeof window === 'undefined') return new Set()
   try {
     const today = new Date().toDateString()
     const saved = localStorage.getItem(STORAGE_KEY)
@@ -87,6 +91,7 @@ function loadCompletedFromStorage() {
 }
 
 function saveCompletedToStorage(completedHabits) {
+  if (typeof window === 'undefined') return
   try {
     const today = new Date().toDateString()
     localStorage.setItem(STORAGE_KEY, JSON.stringify({
@@ -100,6 +105,7 @@ function saveCompletedToStorage(completedHabits) {
 
 // Track which habits have already awarded points today (prevents toggle exploit)
 function loadAwardedPoints() {
+  if (typeof window === 'undefined') return new Set()
   try {
     const today = new Date().toDateString()
     const saved = localStorage.getItem(AWARDED_POINTS_KEY)
@@ -117,6 +123,7 @@ function loadAwardedPoints() {
 }
 
 function saveAwardedPoints(awardedHabits) {
+  if (typeof window === 'undefined') return
   try {
     const today = new Date().toDateString()
     localStorage.setItem(AWARDED_POINTS_KEY, JSON.stringify({
@@ -128,10 +135,18 @@ function saveAwardedPoints(awardedHabits) {
   }
 }
 
-// Singleton to track awarded points across renders
-let awardedPointsCache = loadAwardedPoints()
+// Singleton to track awarded points across renders (lazy initialized)
+let awardedPointsCache = null
+
+function getAwardedPointsCache() {
+  if (awardedPointsCache === null) {
+    awardedPointsCache = loadAwardedPoints()
+  }
+  return awardedPointsCache
+}
 
 function hasAwardedPointsForHabit(habitId) {
+  if (typeof window === 'undefined') return false
   // Refresh cache if it's a new day
   const today = new Date().toDateString()
   const saved = localStorage.getItem(AWARDED_POINTS_KEY)
@@ -141,20 +156,29 @@ function hasAwardedPointsForHabit(habitId) {
       awardedPointsCache = new Set()
     }
   }
-  return awardedPointsCache.has(habitId)
+  return getAwardedPointsCache().has(habitId)
 }
 
 function markPointsAwarded(habitId) {
-  awardedPointsCache.add(habitId)
-  saveAwardedPoints(awardedPointsCache)
+  if (typeof window === 'undefined') return
+  getAwardedPointsCache().add(habitId)
+  saveAwardedPoints(getAwardedPointsCache())
 }
 
 export function useHabits() {
-  const [habits, setHabits] = useState(() => loadHabits())
-  const [completedHabits, setCompletedHabits] = useState(() => loadCompletedFromStorage())
+  const [habits, setHabits] = useState(DEFAULT_HABITS)
+  const [completedHabits, setCompletedHabits] = useState(new Set())
+
+  // Load from localStorage after hydration
+  useEffect(() => {
+    setHabits(loadHabits())
+    setCompletedHabits(loadCompletedFromStorage())
+  }, [])
 
   // Check for day change
   useEffect(() => {
+    if (typeof window === 'undefined') return
+
     const checkDayChange = () => {
       const today = new Date().toDateString()
       const saved = localStorage.getItem(STORAGE_KEY)

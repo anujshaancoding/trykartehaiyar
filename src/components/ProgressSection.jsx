@@ -1,3 +1,5 @@
+"use client"
+
 import { useProgress } from '../hooks/useProgress'
 import ProgressBar from './ProgressBar'
 import CircularProgress from './CircularProgress'

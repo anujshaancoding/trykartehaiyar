@@ -1,3 +1,5 @@
+"use client"
+
 import { useState, useEffect } from 'react'
 import ThemeToggle from './ThemeToggle'
 import FullscreenButton from './FullscreenButton'

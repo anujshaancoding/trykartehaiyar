@@ -1,3 +1,5 @@
+"use client"
+
 import { useState, useEffect, useRef } from 'react'
 import { useHabits } from '../hooks/useHabits'
 import HabitItem from './HabitItem'

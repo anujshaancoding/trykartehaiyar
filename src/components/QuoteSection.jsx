@@ -1,3 +1,5 @@
+"use client"
+
 import { useQuotes } from '../hooks/useQuotes'
 
 function QuoteSection() {

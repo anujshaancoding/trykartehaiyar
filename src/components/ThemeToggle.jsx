@@ -1,3 +1,5 @@
+"use client"
+
 import { useState, useEffect, useRef } from 'react'
 
 const themes = [
@@ -10,31 +12,41 @@ const themes = [
 
 function ThemeToggle() {
   const [isOpen, setIsOpen] = useState(false)
-  const [currentTheme, setCurrentTheme] = useState(() => {
-    return localStorage.getItem('theme') || 'dark'
-  })
-  const [ambientMode, setAmbientMode] = useState(() => {
-    return localStorage.getItem('ambientMode') === 'true'
-  })
-  const [ultraLargeMode, setUltraLargeMode] = useState(() => {
-    return localStorage.getItem('ultraLargeMode') === 'true'
-  })
+  const [currentTheme, setCurrentTheme] = useState('dark')
+  const [ambientMode, setAmbientMode] = useState(false)
+  const [ultraLargeMode, setUltraLargeMode] = useState(false)
+  const [mounted, setMounted] = useState(false)
   const menuRef = useRef(null)
 
+  // Read localStorage after hydration to avoid mismatch
   useEffect(() => {
+    const savedTheme = localStorage.getItem('theme') || 'dark'
+    const savedAmbient = localStorage.getItem('ambientMode') === 'true'
+    const savedUltraLarge = localStorage.getItem('ultraLargeMode') === 'true'
+
+    setCurrentTheme(savedTheme)
+    setAmbientMode(savedAmbient)
+    setUltraLargeMode(savedUltraLarge)
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (!mounted) return
     document.documentElement.setAttribute('data-theme', currentTheme)
     localStorage.setItem('theme', currentTheme)
-  }, [currentTheme])
+  }, [currentTheme, mounted])
 
   useEffect(() => {
+    if (!mounted) return
     document.documentElement.classList.toggle('ambient-mode', ambientMode)
     localStorage.setItem('ambientMode', ambientMode)
-  }, [ambientMode])
+  }, [ambientMode, mounted])
 
   useEffect(() => {
+    if (!mounted) return
     document.documentElement.classList.toggle('ultra-large-mode', ultraLargeMode)
     localStorage.setItem('ultraLargeMode', ultraLargeMode)
-  }, [ultraLargeMode])
+  }, [ultraLargeMode, mounted])
 
   useEffect(() => {
     const handleClickOutside = (e) => {

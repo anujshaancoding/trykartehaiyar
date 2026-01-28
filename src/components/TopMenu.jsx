@@ -1,5 +1,7 @@
+"use client"
+
 import { useState, useRef, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import Link from 'next/link'
 import { useFeedbackCount } from '../hooks/useFeedbackCount'
 
 function TopMenu({ onFeedbackClick, onInfoClick }) {
@@ -27,7 +29,7 @@ function TopMenu({ onFeedbackClick, onInfoClick }) {
     <div className="top-menu" ref={menuRef}>
       {/* Desktop view */}
       <div className="top-menu-desktop">
-        <Link to="/blog" className="top-menu-btn top-menu-journey-btn">
+        <Link href="/blog" className="top-menu-btn top-menu-journey-btn">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
           </svg>
@@ -78,7 +80,7 @@ function TopMenu({ onFeedbackClick, onInfoClick }) {
       {/* Mobile dropdown */}
       {isOpen && (
         <div className="top-menu-dropdown">
-          <Link to="/blog" className="top-menu-dropdown-item top-menu-dropdown-journey" onClick={() => setIsOpen(false)}>
+          <Link href="/blog" className="top-menu-dropdown-item top-menu-dropdown-journey" onClick={() => setIsOpen(false)}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
             </svg>

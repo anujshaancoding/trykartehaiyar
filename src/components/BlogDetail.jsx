@@ -8,9 +8,13 @@ import { useMetaTags } from '../hooks/useMetaTags'
 function BlogDetail() {
   const { slug } = useParams()
   const navigate = useNavigate()
-  const [language, setLanguage] = useState(() => {
-    return localStorage.getItem('blogLanguage') || 'en'
-  })
+  const [language, setLanguage] = useState('en')
+
+  // Read localStorage after mount to avoid SSR issues
+  useEffect(() => {
+    const savedLang = localStorage.getItem('blogLanguage')
+    if (savedLang) setLanguage(savedLang)
+  }, [])
 
   const blog = getBlogBySlug(slug)
   const allBlogs = getAllBlogs()

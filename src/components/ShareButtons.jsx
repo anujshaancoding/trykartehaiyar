@@ -1,3 +1,5 @@
+"use client"
+
 import { useState } from 'react'
 
 function ShareButtons({ title, excerpt, url, coverImage, language }) {

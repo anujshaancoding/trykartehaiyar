@@ -1,3 +1,5 @@
+"use client"
+
 function ProgressBar({ progress, variant = 'default' }) {
   return (
     <div className="progress-bar-container">

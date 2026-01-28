@@ -5,7 +5,8 @@
       "Bash(npm run build:*)",
       "Bash(tree:*)",
       "Read(//c/Users/imanu/Documents/GitHub/**)",
-      "Bash(git -C HabbitTracker log --oneline)"
+      "Bash(git -C HabbitTracker log --oneline)",
+      "Bash(powershell:*)"
     ]
   }
 }

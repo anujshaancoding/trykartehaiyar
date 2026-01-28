@@ -29,9 +29,12 @@ const getYearHarshMessage = (daysLeft, totalDays) => {
 }
 
 export function useProgress() {
-  const [now, setNow] = useState(new Date())
+  const [now, setNow] = useState(null)
 
   useEffect(() => {
+    // Set initial time after hydration to avoid mismatch
+    setNow(new Date())
+
     const interval = setInterval(() => {
       setNow(new Date())
     }, 60000) // Update every minute
@@ -40,6 +43,23 @@ export function useProgress() {
   }, [])
 
   const calculations = useMemo(() => {
+    // Return placeholder values before hydration
+    if (!now) {
+      return {
+        daysLeftMonth: 0,
+        daysLeftYear: 0,
+        monthProgress: 0,
+        yearProgress: 0,
+        monthSubtext: '',
+        monthHarshText: '',
+        yearSubtext: '',
+        yearHarshText: '',
+        currentYear: new Date().getFullYear(),
+        yearMessage: '',
+        daysInMonth: 30
+      }
+    }
+
     const year = now.getFullYear()
     const month = now.getMonth()
 

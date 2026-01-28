@@ -13,6 +13,7 @@ function getCurrentYear() {
 }
 
 function loadGoals(key, periodGetter) {
+  if (typeof window === 'undefined') return []
   try {
     const saved = localStorage.getItem(key)
     if (saved) {
@@ -28,6 +29,7 @@ function loadGoals(key, periodGetter) {
 }
 
 function saveGoals(key, goals, period) {
+  if (typeof window === 'undefined') return
   try {
     localStorage.setItem(key, JSON.stringify({ period, goals }))
   } catch (e) {
@@ -54,15 +56,19 @@ function getTimeRemaining(type) {
 }
 
 export function useGoals() {
-  const [monthlyGoals, setMonthlyGoals] = useState(() =>
-    loadGoals(MONTHLY_GOALS_KEY, getCurrentMonth)
-  )
-  const [yearlyGoals, setYearlyGoals] = useState(() =>
-    loadGoals(YEARLY_GOALS_KEY, getCurrentYear)
-  )
+  const [monthlyGoals, setMonthlyGoals] = useState([])
+  const [yearlyGoals, setYearlyGoals] = useState([])
+
+  // Load goals from localStorage after hydration
+  useEffect(() => {
+    setMonthlyGoals(loadGoals(MONTHLY_GOALS_KEY, getCurrentMonth))
+    setYearlyGoals(loadGoals(YEARLY_GOALS_KEY, getCurrentYear))
+  }, [])
 
   // Check for period change (month/year rollover)
   useEffect(() => {
+    if (typeof window === 'undefined') return
+
     const checkPeriodChange = () => {
       const currentMonth = getCurrentMonth()
       const currentYear = getCurrentYear()

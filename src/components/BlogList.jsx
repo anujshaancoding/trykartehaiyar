@@ -1,11 +1,15 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { getAllBlogs } from '../data/blogs'
 
 function BlogList() {
-  const [language, setLanguage] = useState(() => {
-    return localStorage.getItem('blogLanguage') || 'en'
-  })
+  const [language, setLanguage] = useState('en')
+
+  // Read localStorage after mount to avoid SSR issues
+  useEffect(() => {
+    const savedLang = localStorage.getItem('blogLanguage')
+    if (savedLang) setLanguage(savedLang)
+  }, [])
   const [shareToast, setShareToast] = useState(null)
   const blogs = getAllBlogs()
 

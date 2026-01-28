@@ -1,3 +1,5 @@
+"use client"
+
 function CircularProgress({ progress, size = 120, strokeWidth = 8 }) {
   const radius = (size - strokeWidth) / 2
   const circumference = 2 * Math.PI * radius
