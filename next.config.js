@@ -48,4 +48,14 @@ const withPWA = require('next-pwa')({
 
 module.exports = withPWA({
   reactStrictMode: true,
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.performance = {
+        hints: false,
+        maxEntrypointSize: 512000,
+        maxAssetSize: 512000,
+      }
+    }
+    return config
+  },
 })
