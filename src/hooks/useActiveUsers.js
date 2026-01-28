@@ -5,6 +5,8 @@ export function useActiveUsers() {
   const [activeUsers, setActiveUsers] = useState(0)
 
   useEffect(() => {
+    if (!supabase) return
+
     const channel = supabase.channel('active-users', {
       config: {
         presence: {

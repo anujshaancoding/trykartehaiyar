@@ -31,6 +31,12 @@ function Leaderboard() {
 
   useEffect(() => {
     const fetchLeaderboard = async () => {
+      if (!supabase) {
+        setLeaders(DEFAULT_LEADERS.slice(0, 10))
+        setIsLoading(false)
+        return
+      }
+
       const { data, error } = await supabase
         .from('leaderboard')
         .select('*')
@@ -77,6 +83,8 @@ function Leaderboard() {
     }
 
     fetchLeaderboard()
+
+    if (!supabase) return
 
     // Subscribe to real-time updates
     const channel = supabase

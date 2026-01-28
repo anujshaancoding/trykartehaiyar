@@ -8,6 +8,7 @@ const AWARDED_POINTS_KEY = 'awardedHabitPoints'
 // Add points for task completion
 async function addTaskPoints() {
   if (typeof window === 'undefined') return
+  if (!supabase) return
   const userName = localStorage.getItem('leaderboardUserName')
   if (!userName) return
 

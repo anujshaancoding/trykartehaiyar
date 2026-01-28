@@ -9,6 +9,8 @@ export function useFeedbackCount() {
 
   useEffect(() => {
     const fetchCount = async () => {
+      if (!supabase) return
+
       const { count, error } = await supabase
         .from('feedback')
         .select('*', { count: 'exact', head: true })

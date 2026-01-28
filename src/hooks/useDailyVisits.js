@@ -15,6 +15,8 @@ export function useDailyVisits() {
   // Track a visit when component mounts
   useEffect(() => {
     const trackVisit = async () => {
+      if (!supabase) return
+
       const today = new Date().toISOString().split('T')[0] // YYYY-MM-DD format
       const sessionKey = `visited_${today}`
 
@@ -56,6 +58,11 @@ export function useDailyVisits() {
 
   // Fetch visits data based on filter
   const fetchVisits = useCallback(async () => {
+    if (!supabase) {
+      setLoading(false)
+      return
+    }
+
     setLoading(true)
 
     try {

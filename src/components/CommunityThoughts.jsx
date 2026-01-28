@@ -165,6 +165,12 @@ function CommunityThoughts() {
   // Fetch thoughts from Supabase
   useEffect(() => {
     const fetchThoughts = async () => {
+      if (!supabase) {
+        setThoughts([...DEFAULT_MESSAGES].sort((a, b) => new Date(b.created_at) - new Date(a.created_at)))
+        setIsLoading(false)
+        return
+      }
+
       const { data, error } = await supabase
         .from('community_thoughts')
         .select('*')
@@ -191,6 +197,8 @@ function CommunityThoughts() {
     fetchThoughts()
 
     // Subscribe to real-time updates
+    if (!supabase) return
+
     const channel = supabase
       .channel('community_thoughts_changes')
       .on(
@@ -228,6 +236,12 @@ function CommunityThoughts() {
     }
 
     setIsSubmitting(true)
+
+    if (!supabase) {
+      setThoughtError('Service temporarily unavailable')
+      setIsSubmitting(false)
+      return
+    }
 
     // Check if message contains flagged or blurred words
     const isFlagged = containsFlaggedWords(thoughtName) || containsFlaggedWords(thoughtMessage)

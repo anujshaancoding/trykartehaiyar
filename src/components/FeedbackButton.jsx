@@ -55,6 +55,10 @@ function FeedbackButton({ externalOpen, onClose }) {
       setError(null)
 
       try {
+        if (!supabase) {
+          throw new Error('Service temporarily unavailable')
+        }
+
         // Save to Supabase
         const { error: supabaseError } = await supabase
           .from('feedback')

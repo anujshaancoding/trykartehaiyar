@@ -82,6 +82,9 @@ export function useLeaderboard() {
   const addPoints = useCallback(async (name, pointsToAdd, reason) => {
     if (!name) return
 
+    // Skip if supabase is not available
+    if (!supabase) return
+
     // Anti-exploit: Check daily limit before awarding points
     if (!canAwardPoints(reason, pointsToAdd)) {
       console.log(`Daily limit reached for ${reason} points`)
