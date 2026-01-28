@@ -6,8 +6,7 @@ import HabitsSection from './components/HabitsSection'
 import GoalsSection from './components/GoalsSection'
 import QuoteSection from './components/QuoteSection'
 import CommunitySection from './components/CommunitySection'
-import FullscreenButton from './components/FullscreenButton'
-import ThemeToggle from './components/ThemeToggle'
+import BottomBar from './components/BottomBar'
 import ActiveUsers from './components/ActiveUsers'
 import CookieConsent from './components/CookieConsent'
 import FeedbackButton from './components/FeedbackButton'
@@ -16,15 +15,6 @@ import InfoModal from './components/InfoModal'
 import Onboarding from './components/Onboarding'
 import BlogList from './components/BlogList'
 import BlogDetail from './components/BlogDetail'
-import { useTime } from './hooks/useTime'
-
-const NIGHT_MESSAGES = [
-  "Tomorrow is watching.",
-  "You already know what to do.",
-  "Don't trade long-term peace for short-term comfort."
-]
-
-const IDLE_MESSAGE = "Still time. Still your move."
 
 function App() {
   const [isFullscreen, setIsFullscreen] = useState(false)
@@ -33,13 +23,6 @@ function App() {
   const [showBanner, setShowBanner] = useState(() => {
     return localStorage.getItem('bannerClosed') !== 'true'
   })
-  const [isIdle, setIsIdle] = useState(false)
-  const { isNightTime, hour24 } = useTime()
-
-  // Night time message based on hour
-  const nightMessageIndex = hour24 >= 21 ? (hour24 - 21) % NIGHT_MESSAGES.length : 0
-  const nightMessage = NIGHT_MESSAGES[nightMessageIndex]
-
   const closeBanner = () => {
     setShowBanner(false)
     localStorage.setItem('bannerClosed', 'true')
@@ -82,27 +65,6 @@ function App() {
     }
   }, [showBanner, isFullscreen])
 
-  // Idle detection - show message when user hasn't interacted for 2 minutes
-  useEffect(() => {
-    let idleTimer
-
-    const resetIdleTimer = () => {
-      setIsIdle(false)
-      clearTimeout(idleTimer)
-      idleTimer = setTimeout(() => setIsIdle(true), 120000) // 2 minutes
-    }
-
-    const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart']
-    events.forEach(event => document.addEventListener(event, resetIdleTimer))
-
-    resetIdleTimer() // Initialize timer
-
-    return () => {
-      events.forEach(event => document.removeEventListener(event, resetIdleTimer))
-      clearTimeout(idleTimer)
-    }
-  }, [])
-
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen().catch(console.error)
@@ -111,7 +73,7 @@ function App() {
     }
   }
 
-  const HomePage = () => (
+  const homePage = (
     <>
       <Onboarding />
       {showBanner && !isFullscreen && (
@@ -145,19 +107,7 @@ function App() {
       </main>
       <CookieConsent />
 
-      {/* Bottom bar with theme, message, and fullscreen aligned horizontally */}
-      <div className="bottom-bar">
-        <ThemeToggle />
-        <div className="bottom-bar-center">
-          {isIdle && !isNightTime && (
-            <div className="idle-message">{IDLE_MESSAGE}</div>
-          )}
-          {isNightTime && (
-            <div className="night-message">{nightMessage}</div>
-          )}
-        </div>
-        <FullscreenButton isFullscreen={isFullscreen} onToggle={toggleFullscreen} />
-      </div>
+      <BottomBar isFullscreen={isFullscreen} onToggle={toggleFullscreen} />
 
       <footer className="app-footer">
         <p className="footer-micro-copy">This is not a clock. It's a mirror.</p>
@@ -169,7 +119,7 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/" element={<HomePage />} />
+      <Route path="/" element={homePage} />
       <Route path="/blog" element={<BlogList />} />
       <Route path="/blog/:slug" element={<BlogDetail />} />
     </Routes>
