@@ -2,8 +2,23 @@ const withPWA = require('next-pwa')({
   dest: 'public',
   register: true,
   skipWaiting: true,
+  clientsClaim: true,
+  reloadOnOnline: true,
   disable: process.env.NODE_ENV === 'development',
   runtimeCaching: [
+    {
+      // Don't cache pages - always fetch fresh
+      urlPattern: /^https:\/\/.*\/_next\/.*|^https:\/\/[^/]+\/?$/i,
+      handler: 'NetworkFirst',
+      options: {
+        cacheName: 'pages-cache',
+        expiration: {
+          maxEntries: 32,
+          maxAgeSeconds: 60 * 60, // 1 hour
+        },
+        networkTimeoutSeconds: 10,
+      },
+    },
     {
       urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
       handler: 'CacheFirst',
