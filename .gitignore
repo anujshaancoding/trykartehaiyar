@@ -65,3 +65,10 @@ coverage/
 .netlify/
 
 .nul
+
+# ================================
+# Design context / token dumps (local only, do not push)
+# ================================
+DESIGN_CONTEXT.md
+TOKENS.md
+design-context/

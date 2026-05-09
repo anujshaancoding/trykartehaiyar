@@ -1,4 +1,4 @@
-// File: C:\Users\imanu\Documents\GitHub\TryKarteHai\website\src\app\page.js
+// File: E:\OFFICE WORK\TKHY\website\src\app\page.js
 import * as entry from '../../../src/app/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

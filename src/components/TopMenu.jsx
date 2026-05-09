@@ -29,6 +29,14 @@ function TopMenu({ onFeedbackClick, onInfoClick }) {
     <div className="top-menu" ref={menuRef}>
       {/* Desktop view */}
       <div className="top-menu-desktop">
+        <Link href="/projects" className="top-menu-btn top-menu-projects-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+            <line x1="8" y1="21" x2="16" y2="21" />
+            <line x1="12" y1="17" x2="12" y2="21" />
+          </svg>
+          <span>Projects</span>
+        </Link>
         <Link href="/blog" className="top-menu-btn top-menu-journey-btn">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
@@ -80,6 +88,14 @@ function TopMenu({ onFeedbackClick, onInfoClick }) {
       {/* Mobile dropdown */}
       {isOpen && (
         <div className="top-menu-dropdown">
+          <Link href="/projects" className="top-menu-dropdown-item" onClick={() => setIsOpen(false)}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+              <line x1="8" y1="21" x2="16" y2="21" />
+              <line x1="12" y1="17" x2="12" y2="21" />
+            </svg>
+            <span>Projects</span>
+          </Link>
           <Link href="/blog" className="top-menu-dropdown-item top-menu-dropdown-journey" onClick={() => setIsOpen(false)}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />

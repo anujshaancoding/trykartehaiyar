@@ -1,8 +1,9 @@
-import DashboardClient from '@/components/DashboardClient'
+import Landing from '@/components/landing/Landing'
 
-// Disable static generation - page uses Supabase data
+// Renders client-side state (clock, vibe, community feed). Skip static caching
+// so the live numbers don't get frozen at build time.
 export const dynamic = 'force-dynamic'
 
 export default function HomePage() {
-  return <DashboardClient />
+  return <Landing />
 }

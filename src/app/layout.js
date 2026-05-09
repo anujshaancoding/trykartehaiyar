@@ -1,4 +1,5 @@
-import { Inter, JetBrains_Mono } from 'next/font/google'
+import { Inter, Inter_Tight, JetBrains_Mono, Instrument_Serif } from 'next/font/google'
+import ErrorBoundary from '@/components/ErrorBoundary'
 import './globals.css'
 
 const inter = Inter({
@@ -8,10 +9,25 @@ const inter = Inter({
   display: 'swap',
 })
 
+const interTight = Inter_Tight({
+  subsets: ['latin'],
+  variable: '--font-display',
+  weight: ['300', '400', '500', '600', '700', '800'],
+  display: 'swap',
+})
+
 const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
   variable: '--font-mono',
   weight: ['300', '400', '500', '600'],
+  display: 'swap',
+})
+
+const instrumentSerif = Instrument_Serif({
+  subsets: ['latin'],
+  variable: '--font-serif',
+  weight: ['400'],
+  style: ['normal', 'italic'],
   display: 'swap',
 })
 
@@ -57,7 +73,11 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${inter.variable} ${interTight.variable} ${jetbrainsMono.variable} ${instrumentSerif.variable}`}
+      suppressHydrationWarning
+    >
       <head>
         <script
           dangerouslySetInnerHTML={{
@@ -78,7 +98,7 @@ export default function RootLayout({ children }) {
           }}
         />
       </head>
-      <body>{children}</body>
+      <body><ErrorBoundary>{children}</ErrorBoundary></body>
     </html>
   )
 }
