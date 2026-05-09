@@ -34,7 +34,7 @@ const PORTALS = [
     key: 'developer',
     idx: 3,
     label: 'Developers',
-    tag: 'developer.trykartehaiyar.com',
+    tag: 'developers.trykartehaiyar.in',
     headline: 'Ship code.\nEvery damn day.',
     desc: 'Commit streaks, problem of the day, project showcase. CS is built one bug at a time.',
     stat: { v: '4,203', l: 'commits this week' },
