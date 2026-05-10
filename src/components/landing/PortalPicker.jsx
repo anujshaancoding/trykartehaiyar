@@ -11,6 +11,8 @@ const PORTALS = [
     idx: 1,
     label: 'Workout',
     tag: 'workout.trykartehaiyar.com',
+    href: '/coming-soon?portal=workout',
+    ready: false,
     headline: 'Train the body.\nNo excuses.',
     desc: 'Daily workout splits, progress tracking, accountability. PRs only beat themselves.',
     stat: { v: '12,847', l: 'workouts logged this month' },
@@ -23,6 +25,8 @@ const PORTALS = [
     idx: 2,
     label: 'Students',
     tag: 'students.trykartehaiyar.com',
+    href: '/coming-soon?portal=students',
+    ready: false,
     headline: 'NEET. Govt. Exams.\nGrind in silence.',
     desc: 'Pomodoro sessions, syllabus tracker, mock test scores. Build the habit before the result.',
     stat: { v: '8,491', l: 'study hours this week' },
@@ -35,6 +39,8 @@ const PORTALS = [
     idx: 3,
     label: 'Developers',
     tag: 'developers.trykartehaiyar.in',
+    href: 'https://developers.trykartehaiyar.in',
+    ready: true,
     headline: 'Ship code.\nEvery damn day.',
     desc: 'Commit streaks, problem of the day, project showcase. CS is built one bug at a time.',
     stat: { v: '4,203', l: 'commits this week' },
@@ -134,7 +140,7 @@ function PortalCard({ portal, isActive, isInactive, isMobile, onHover }) {
 
   return (
     <a
-      href={`https://${portal.tag}`}
+      href={portal.href}
       onMouseEnter={onHover}
       onFocus={onHover}
       className="tk2-card"
@@ -247,9 +253,27 @@ function PortalCard({ portal, isActive, isInactive, isMobile, onHover }) {
                 letterSpacing: '0.16em',
                 textTransform: 'uppercase',
                 whiteSpace: 'nowrap',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
               }}
             >
-              0{portal.idx} · {portal.label}
+              <span>0{portal.idx} · {portal.label}</span>
+              {!portal.ready && (
+                <span
+                  style={{
+                    fontSize: 9,
+                    padding: '2px 6px',
+                    borderRadius: 999,
+                    border: `1px solid ${portal.color}`,
+                    color: portal.color,
+                    letterSpacing: '0.16em',
+                    lineHeight: 1.2,
+                  }}
+                >
+                  Soon
+                </span>
+              )}
             </div>
             <div
               className="tk2-mono"
